@@ -39,7 +39,7 @@ public class PedidoService(
             ProdutoId = i.ProdutoId,
             Descricao = i.Descricao,
             Quantidade = i.Quantidade,
-            PrecoUnitario = i.PrecoUnitario
+            PrecoUnitario = Math.Round(i.PrecoUnitario, 2, MidpointRounding.ToZero) // Garantir precisão
         }).ToList();
 
         // variável separada para não ser computado novamente
@@ -51,11 +51,11 @@ public class PedidoService(
             DataVenda = args.DataVenda,
             Cliente = cliente,
             Itens = itensPedido,
-            SubTotal = subTotal,
+            SubTotal = Math.Round(subTotal, 2, MidpointRounding.ToZero),
             Status = PedidoStatus.PENDENTE,
         };
 
-        pedido.Desconto = ObterDesconto(subTotal, pedido.Cliente.Categoria);
+        pedido.Desconto = Math.Round(ObterDesconto(subTotal, cliente.Categoria), 2, MidpointRounding.ToZero);
         pedido.ValorTotal = Math.Round(subTotal - pedido.Desconto, 2, MidpointRounding.ToZero);
 
         await context.Database.BeginTransactionAsync();
@@ -80,17 +80,16 @@ public class PedidoService(
 
     private async Task EnviarParaFaturamento(Pedido pedido)
     {
-        // Criação do sumário para envio
         var sumario = new SumarioFaturamentoPostArgs
         {
             Identificador = pedido.Identificador,
-            SubTotal = pedido.SubTotal,
-            Descontos = pedido.Desconto,
-            ValorTotal = pedido.ValorTotal,
+            SubTotal = Math.Round(pedido.SubTotal, 2, MidpointRounding.ToZero),
+            Descontos = Math.Round(pedido.Desconto, 2, MidpointRounding.ToZero),
+            ValorTotal = Math.Round(pedido.ValorTotal, 2, MidpointRounding.ToZero),
             Itens = pedido.Itens.Select(i => new SumarioFaturamentoItemPostArgs
             {
                 Quantidade = i.Quantidade,
-                PrecoUnitario = i.PrecoUnitario
+                PrecoUnitario = Math.Round(i.PrecoUnitario, 2, MidpointRounding.ToZero)
             }).ToList()
         };
 

@@ -32,7 +32,7 @@ public class Pedido
         Itens = Itens.Select(i => new PedidoItemModel
         {
             Descricao = i.Descricao,
-            PrecoUnitario = decimal.Round(i.PrecoUnitario, 2),
+            PrecoUnitario = i.PrecoUnitario,
             ProdutoId = i.ProdutoId,
             Quantidade = i.Quantidade,
         }).ToList(),

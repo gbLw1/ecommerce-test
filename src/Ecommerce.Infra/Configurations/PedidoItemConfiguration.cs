@@ -13,12 +13,12 @@ internal sealed class PedidoItemConfiguration
 
         builder
             .Property(i => i.Quantidade)
-            .HasColumnType("decimal(18,2)")
+            .HasColumnType("decimal(16,2)")
             .IsRequired();
 
         builder
             .Property(i => i.PrecoUnitario)
-            .HasColumnType("decimal(18,2)")
+            .HasColumnType("decimal(16,2)")
             .IsRequired();
 
         builder

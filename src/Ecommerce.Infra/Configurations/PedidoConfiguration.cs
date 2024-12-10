@@ -13,15 +13,15 @@ internal sealed class PedidoConfiguration
 
         builder
             .Property(p => p.SubTotal)
-            .HasColumnType("decimal(18,2)");
+            .HasColumnType("decimal(16,2)");
 
         builder
             .Property(p => p.Desconto)
-            .HasColumnType("decimal(18,2)");
+            .HasColumnType("decimal(16,2)");
 
         builder
             .Property(p => p.ValorTotal)
-            .HasColumnType("decimal(18,2)");
+            .HasColumnType("decimal(16,2)");
 
         builder
             .Property(p => p.Status)

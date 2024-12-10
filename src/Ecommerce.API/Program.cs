@@ -33,7 +33,10 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<EcommerceContext>();
-    dbContext.Database.Migrate();
+    if (dbContext.Database.GetPendingMigrations().Any())
+    {
+        dbContext.Database.Migrate();
+    }
 }
 
 // Configure the HTTP request pipeline.
