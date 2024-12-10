@@ -3,7 +3,7 @@ using Ecommerce.Shared.Models;
 
 namespace Ecommerce.Infra.Entities;
 
-public class Pedido
+public sealed class Pedido
 {
     public Guid Id { get; set; }
     public Guid Identificador { get; set; }

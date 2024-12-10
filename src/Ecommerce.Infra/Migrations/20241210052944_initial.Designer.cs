@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ecommerce.Infra.Migrations
 {
     [DbContext(typeof(EcommerceContext))]
-    [Migration("20241210035315_initial")]
+    [Migration("20241210052944_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -52,6 +52,36 @@ namespace Ecommerce.Infra.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Clientes");
+                });
+
+            modelBuilder.Entity("Ecommerce.Infra.Entities.FilaFaturamento", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CriadoEm")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("Payload")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("PedidoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Tentativas")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FilaFaturamento");
                 });
 
             modelBuilder.Entity("Ecommerce.Infra.Entities.Pedido", b =>

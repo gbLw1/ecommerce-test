@@ -96,27 +96,36 @@ public class PedidoService(
         var json = JsonSerializer.Serialize(sumario);
         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        //try
-        //{
-        //    var response = await httpClient.PostAsync("/vendas", content);
-        //    if (response.IsSuccessStatusCode)
-        //    {
-        //        // Atualiza o status do pedido para CONCLUIDO
-        //        pedido.Status = PedidoStatus.CONCLUIDO;
-        //        context.Update(pedido);
-        //        await context.SaveChangesAsync();
-        //    }
-        //    else
-        //    {
-        //        // Trata erros do serviço de faturamento
-        //        var errorMessage = await response.Content.ReadAsStringAsync();
-        //        throw new Exception($"Erro no serviço de faturamento: {errorMessage}");
-        //    }
-        //}
-        //catch (HttpRequestException ex)
-        //{
-        //    throw new Exception("Erro ao enviar pedido para o serviço de faturamento.", ex);
-        //}
+        try
+        {
+            var response = await httpClient.PostAsync("/api/vendas", content);
+            if (response.IsSuccessStatusCode)
+            {
+                pedido.Status = PedidoStatus.CONCLUIDO;
+                context.Update(pedido);
+                await context.SaveChangesAsync();
+            }
+            else
+            {
+                // Trata erros do serviço de faturamento
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Erro no serviço de faturamento: {errorMessage}");
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning(ex, "Serviço de faturamento indisponível. Adicionando pedido {PedidoId} à fila.", pedido.Identificador);
+
+            // Adicionar na fila de retry em caso de erro
+            var filaItem = new FilaFaturamento
+            {
+                PedidoId = pedido.Identificador,
+                Payload = json
+            };
+
+            context.FilaFaturamento.Add(filaItem);
+            await context.SaveChangesAsync();
+        }
     }
 
     public async Task<IReadOnlyCollection<PedidoModel>> ObterVendasAsync()
@@ -194,15 +203,18 @@ public class PedidoService(
 
         // Recalcular valores
         var subTotal = pedido.Itens.Sum(i => i.Quantidade * i.PrecoUnitario);
-        pedido.SubTotal = subTotal;
-        pedido.Desconto = ObterDesconto(subTotal, pedido.Cliente.Categoria);
-        pedido.ValorTotal = subTotal - pedido.Desconto;
+        pedido.SubTotal = Math.Round(subTotal, 2, MidpointRounding.ToZero);
+        pedido.Desconto = Math.Round(ObterDesconto(subTotal, pedido.Cliente.Categoria), 2, MidpointRounding.ToZero);
+        pedido.ValorTotal = Math.Round(subTotal - pedido.Desconto, 2, MidpointRounding.ToZero);
 
         await context.Database.BeginTransactionAsync();
         try
         {
             context.Update(pedido);
             await context.SaveChangesAsync();
+
+            await EnviarParaFaturamento(pedido);
+
             await context.Database.CommitTransactionAsync();
         }
         catch (Exception ex)

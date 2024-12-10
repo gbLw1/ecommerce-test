@@ -2,7 +2,7 @@
 
 namespace Ecommerce.Infra.Entities;
 
-public class Cliente
+public sealed class Cliente
 {
     public Guid Id { get; set; }
     public Guid ClienteId { get; set; }

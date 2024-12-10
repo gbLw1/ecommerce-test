@@ -8,6 +8,7 @@ public class EcommerceContext(DbContextOptions<EcommerceContext> options) : DbCo
     public DbSet<Pedido> Pedidos { get; set; } = default!;
     public DbSet<PedidoItem> PedidoItens { get; set; } = default!;
     public DbSet<Cliente> Clientes { get; set; } = default!;
+    public DbSet<FilaFaturamento> FilaFaturamento { get; set; } = default!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder builder)
     {

@@ -2,6 +2,7 @@ using Ecommerce.Infra.Context;
 using Ecommerce.Services.Abstractions;
 using Ecommerce.Services.Core;
 using Microsoft.EntityFrameworkCore;
+using Polly;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +21,22 @@ builder.Services.AddDbContext<EcommerceContext>(options =>
 builder.Services.AddScoped<IPedidoService, PedidoService>();
 
 // Add HttpClient para comunicação com o serviço de faturamento
-builder.Services.AddHttpClient<PedidoService>(client =>
+builder.Services.AddHttpClient<IPedidoService, PedidoService>(client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["FaturamentoAPI:BaseUrl"]
+        ?? throw new InvalidOperationException("appSettings section: FaturamentoAPI não configurada."));
+    client.DefaultRequestHeaders.Add("email", builder.Configuration["FaturamentoAPI:Email"]);
+})
+.AddTransientHttpErrorPolicy(policyBuilder =>
+    policyBuilder.WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))) // backoff exponencial
+)
+.AddPolicyHandler(Policy.TimeoutAsync<HttpResponseMessage>(TimeSpan.FromSeconds(10))); // Timeout de 10 segundos
+
+// Registra o BackgroundService para fila de retry dos faturamentos que falharam
+builder.Services.AddHostedService<FilaFaturamentoProcessor>();
+
+// Add HttpClient para background service
+builder.Services.AddHttpClient<FilaFaturamentoProcessor>(client =>
 {
     client.BaseAddress = new Uri(builder.Configuration["FaturamentoAPI:BaseUrl"]
         ?? throw new InvalidOperationException("appSettings section: FaturamentoAPI não configurada."));

@@ -4,8 +4,6 @@ namespace Ecommerce.Shared.Args;
 
 public sealed class PedidoPutArgs
 {
-    public Guid Identificador { get; set; }
-
     public DateTime DataVenda { get; set; }
 
     public required ClientePutArgs Cliente { get; set; }

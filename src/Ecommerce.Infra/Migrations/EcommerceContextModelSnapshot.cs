@@ -51,6 +51,36 @@ namespace Ecommerce.Infra.Migrations
                     b.ToTable("Clientes");
                 });
 
+            modelBuilder.Entity("Ecommerce.Infra.Entities.FilaFaturamento", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CriadoEm")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("Payload")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("PedidoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Tentativas")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FilaFaturamento");
+                });
+
             modelBuilder.Entity("Ecommerce.Infra.Entities.Pedido", b =>
                 {
                     b.Property<Guid>("Id")
