@@ -1,6 +1,16 @@
 # Desafio Técnico - E-commerce
 
-## Fase 1
+## Objetivo
+
+Você foi contratado(a) por uma plataforma de e-commerce para desenvolver
+uma API responsável pelo processamento dos pedidos do site. A API deverá receber
+uma requisição para gravar uma venda, seguindo o modelo de JSON no Anexo 1.
+Após o recebimento, deve ser aplicado as regras de desconto, de acordo com a
+categoria do cliente, e salvá-lo no banco de dados. Por fim, após salvar o pedido no
+banco de dados, deverá ser realizado uma requisição HTTP para um serviço externo,
+responsável por realizar o faturamento desse pedido
+
+### Fase 1
 
 Desenvolva um endpoint, utilizando .NET (5, 6 ou 8), para o processamento
 de vendas, seguindo o JSON no Anexo 1, aplique as regras de desconto, de acordo
@@ -60,7 +70,7 @@ como quiser, mas é importante que mantenha o formato do JSON._
 }
 ```
 
-## Fase 2
+### Fase 2
 
 Após gravar o pedido, já com os descontos, no banco de dados, é necessário
 enviar um sumário dele para um serviço externo que realizará o faturamento da
@@ -117,3 +127,46 @@ Corpo:
   ]
 }
 ```
+
+## Desenvolvimento
+
+### Setup
+
+1. Clone o repositório
+2. Abra o projeto no Visual Studio
+3. Altere a string de conexão nos arquivos [`appsettings.Development.json`](./src/Ecommerce.API/appsettings.Development.json) e [`EcommerceContextFactory.cs`](./src/Ecommerce.Infra/Context/EcommerceContextFactory.cs) para a sua
+   instância do SQL Server
+4. Altere o email na section `FaturamentoAPI` no arquivo [`appsettings.Development.json`](./src/Ecommerce.API/appsettings.Development.json) para o seu email
+5. Execute o projeto `Ecommerce.API` (as migrations serão aplicadas automaticamente)
+
+### Arquitetura
+
+Para a escolha da arquitetura, optei por uma divisão em 4 camadas que suprisse o objetivo do projeto e que também fosse escalável para futuras implementações:
+
+- **API**: Camada responsável por receber as requisições HTTP e direcionar para a camada services
+- **Services**: Camada responsável por orquestrar as regras de negócio e realizar a comunicação com o banco de dados
+- **Infra**: Camada responsável por armazenar as entidades, mapeamento das tabelas, configurações do EF Core e migrations
+- **Shared**: Camada responsável por armazenar as DTOs e Enums compartilhados entre as camadas
+
+### Funcionalidades
+
+- [x] Processamento de vendas salvando no banco de dados SQL Server
+- [x] Aplicação de descontos de acordo com a categoria do cliente
+- [x] Listagem de pedidos
+- [x] Obtenção de um pedido cadastrado
+- [x] Alteração de pedidos
+- [x] Integração com serviço externo de faturamento
+- [x] Retries com Polly reduzindo falhas devido instabilidade temporária
+- [x] Timeout controlado evitando travamentos em respostas indefinidas
+- [x] Fila para reprocessamento de pedidos que falharam no processo de faturamento, garante que pedidos sejam faturados mesmo se o serviço estiver fora do ar por um longo período
+- [x] Background service para automatização do agendamento e reprocessamento de pedidos da fila de falhas
+- [x] Logs de falhas com `ILogger` para monitoramento e análise de erros
+- [x] Documentação da API com Swagger
+
+### Tecnologias
+
+- .NET 8
+- Entity Framework Core
+- SQL Server
+- Swagger
+- Polly
