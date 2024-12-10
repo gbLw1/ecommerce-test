@@ -43,6 +43,17 @@ builder.Services.AddHttpClient<FilaFaturamentoProcessor>(client =>
     client.DefaultRequestHeaders.Add("email", builder.Configuration["FaturamentoAPI:Email"]);
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+    {
+        builder
+            .AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
 
 // Aplicando migrations ao iniciar a aplicação
@@ -61,6 +72,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors();
 
 app.UseHttpsRedirection();
 
