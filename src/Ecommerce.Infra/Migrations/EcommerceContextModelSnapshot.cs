@@ -64,7 +64,7 @@ namespace Ecommerce.Infra.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("Desconto")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(16,2)");
 
                     b.Property<Guid>("Identificador")
                         .HasColumnType("uniqueidentifier");
@@ -75,10 +75,10 @@ namespace Ecommerce.Infra.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<decimal>("SubTotal")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(16,2)");
 
                     b.Property<decimal>("ValorTotal")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(16,2)");
 
                     b.HasKey("Id");
 
@@ -102,13 +102,13 @@ namespace Ecommerce.Infra.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("PrecoUnitario")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(16,2)");
 
                     b.Property<int>("ProdutoId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Quantidade")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(16,2)");
 
                     b.HasKey("Id");
 

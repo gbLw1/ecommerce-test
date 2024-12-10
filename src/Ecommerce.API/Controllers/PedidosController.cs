@@ -31,7 +31,11 @@ public class PedidosController(
         try
         {
             var venda = await vendaService.ProcessarVendaAsync(args);
-            return Ok(venda.Identificador);
+
+            return CreatedAtAction(
+                actionName: nameof(ObterVenda),
+                routeValues: new { pedidoId = venda.Identificador },
+                value: venda);
         }
         catch (Exception ex)
         {

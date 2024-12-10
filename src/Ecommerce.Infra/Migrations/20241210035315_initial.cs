@@ -33,9 +33,9 @@ namespace Ecommerce.Infra.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Identificador = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     DataVenda = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    SubTotal = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Desconto = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    ValorTotal = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    SubTotal = table.Column<decimal>(type: "decimal(16,2)", nullable: false),
+                    Desconto = table.Column<decimal>(type: "decimal(16,2)", nullable: false),
+                    ValorTotal = table.Column<decimal>(type: "decimal(16,2)", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     ClienteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
@@ -57,8 +57,8 @@ namespace Ecommerce.Infra.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ProdutoId = table.Column<int>(type: "int", nullable: false),
                     Descricao = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Quantidade = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    PrecoUnitario = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Quantidade = table.Column<decimal>(type: "decimal(16,2)", nullable: false),
+                    PrecoUnitario = table.Column<decimal>(type: "decimal(16,2)", nullable: false),
                     PedidoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
