@@ -31,18 +31,18 @@ export const Itens = () => {
   }
 
   function onSubmit(data: PedidoItemArgs) {
-    console.log(data);
     addItem(data);
     setCadastrandoItem(false);
     reset();
   }
 
   return (
-    <div className="grid grid-cols-1 gap-4 border border-gray-300 p-4 rounded bg-gray-50">
+    <div className="grid grid-cols-1 gap-4 border border-gray-300 p-4 rounded bg-gray-50 h-fit">
       <h2 className="text-xl font-semibold">Itens</h2>
 
       {!cadastrandoItem && (
         <button
+          type="button"
           className="bg-blue-600 text-white px-4 py-2 rounded"
           onClick={() => setCadastrandoItem(true)}
         >
@@ -158,7 +158,7 @@ export const Itens = () => {
         </form>
       )}
 
-      {/** Lista de itens */}
+      {/* Lista de itens */}
       {itens.length > 0 && (
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
           {itens.map((item) => (

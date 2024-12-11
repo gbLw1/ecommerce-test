@@ -8,7 +8,9 @@ interface FaturamentoStore extends PedidoPostArgs {
   setPedido: (
     pedido: Pick<PedidoPostArgs, "identificador" | "dataVenda">
   ) => void;
-  setCliente: (cliente: ClientePostArgs) => void;
+  addCliente: (cliente: ClientePostArgs) => void;
+  editCliente: (cliente: ClientePostArgs) => void;
+  deleteCliente: () => void;
   addItem: (item: PedidoItemArgs) => void;
   editItem: (item: PedidoItemArgs) => void;
   deleteItem: (item: PedidoItemArgs) => void;
@@ -26,7 +28,17 @@ export const useFaturamentoStore = create<FaturamentoStore>()((set) => ({
   identificador: "",
   itens: [],
   setPedido: (pedido) => set((state) => ({ ...state, ...pedido })),
-  setCliente: (cliente) => set({ cliente }),
+  addCliente: (cliente) => set({ cliente }),
+  editCliente: (cliente) => set({ cliente }),
+  deleteCliente: () =>
+    set({
+      cliente: {
+        nome: "",
+        categoria: ClienteCategoria.REGULAR,
+        clienteId: "",
+        cpf: "",
+      },
+    }),
   addItem: (item) => set((state) => ({ itens: [...state.itens, item] })),
   editItem: (item) =>
     set((state) => ({

@@ -15,9 +15,6 @@ export default function Faturamento() {
     cancelarProcessoDeFaturamento,
   } = useFaturamentoStore();
 
-  // const [cadastrandoCliente, setCadastrandoCliente] = useState<boolean>(false);
-  // const [adicionandoItem, setAdicionandoItem] = useState<boolean>(false);
-
   const faturamentoIniciado: boolean = !!identificador && !!dataVenda;
 
   function iniciarProcessoFaturamento(): void {
@@ -98,46 +95,6 @@ export default function Faturamento() {
           </button>
         </div>
       )}
-
-      {/* {faturamentoIniciado && cadastrandoCliente && (
-        <>
-          <div className="mt-8">
-            <h2 className="text-xl font-semibold">Cliente</h2>
-            <p>Adicione o cliente que está realizando a compra.</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-            <div className="grid grid-cols-1 gap-4">
-              <input
-                type="text"
-                placeholder="Nome do cliente"
-                className="border border-gray-300 p-2 rounded"
-              />
-              <input
-                type="text"
-                placeholder="CPF do cliente"
-                className="border border-gray-300 p-2 rounded"
-              />
-              <select
-                className="border border-gray-300 p-2 rounded"
-                defaultValue="REGULAR"
-              >
-                <option value="REGULAR">Regular</option>
-                <option value="PREMIUM">Premium</option>
-                <option value="VIP">VIP</option>
-              </select>
-              <button
-                className="bg-blue-500 text-white px-4 py-2 rounded max-w-fit"
-                onClick={() =>
-                  toast.success("Cliente registrado ao pedido com sucesso!")
-                }
-              >
-                Registrar Cliente
-              </button>
-            </div>
-          </div>
-        </>
-      )} */}
     </MainLayout>
   );
 }
