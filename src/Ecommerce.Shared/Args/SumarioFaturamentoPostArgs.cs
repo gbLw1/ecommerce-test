@@ -7,8 +7,8 @@ public sealed class SumarioFaturamentoPostArgs
     [JsonPropertyName("identificador")]
     public Guid Identificador { get; set; }
 
-    [JsonPropertyName("subTotal")]
-    public decimal SubTotal { get; set; }
+    [JsonPropertyName("subtotal")]
+    public decimal Subtotal { get; set; }
 
     [JsonPropertyName("descontos")]
     public decimal Descontos { get; set; }
