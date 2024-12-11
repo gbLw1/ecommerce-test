@@ -27,6 +27,7 @@ export default function Faturamento() {
   } = useFaturamentoStore();
 
   const faturamentoIniciado: boolean = !!identificador && !!dataVenda;
+  const clienteCadastrado = cliente.nome && cliente.cpf && cliente.clienteId;
 
   function iniciarProcessoFaturamento(): void {
     const guid = generate_uuidv4();
@@ -131,7 +132,7 @@ export default function Faturamento() {
         </div>
       )}
 
-      {faturamentoIniciado && cliente && itens.length > 0 && (
+      {faturamentoIniciado && clienteCadastrado && itens.length > 0 && (
         <div className="flex justify-end mt-8">
           <button
             className="bg-green-600 text-white px-4 py-2 rounded max-w-fit focus:outline-none"
