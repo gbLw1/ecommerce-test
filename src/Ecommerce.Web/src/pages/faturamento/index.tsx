@@ -7,7 +7,7 @@ import { Itens } from "./components/itens";
 import api from "../../services/api-client";
 import { PedidoPostArgs } from "../../interfaces/args/pedido-post.args";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import apiErrorHandler from "../../services/api-error-handler";
 import { toast } from "react-toastify";
 import { convertAmountToNumber } from "../../utils/convert-amout";
@@ -68,6 +68,12 @@ export default function Faturamento() {
         setLoadingFaturamento(false);
       });
   }
+
+  useEffect(() => {
+    resetarProcessoDeFaturamento();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <MainLayout>

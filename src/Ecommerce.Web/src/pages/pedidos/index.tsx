@@ -121,10 +121,16 @@ export default function ListaPedidos() {
                   {convertDate(pedido.dataVenda, "DD/MM/YYYY HH:mm:ss")}
                 </span>
                 <span className="text-sm">
-                  <strong>Subtotal</strong>: {pedido.subTotal}
+                  <strong>Subtotal</strong>:{" "}
+                  {convertAmountToBRL(pedido.subTotal)}
                 </span>
                 <span className="text-sm">
-                  <strong>Descontos</strong>: {pedido.desconto}
+                  <strong>Descontos</strong>:{" "}
+                  {pedido.desconto > 0 ? (
+                    convertAmountToBRL(pedido.desconto)
+                  ) : (
+                    <i>Nenhum desconto aplicado</i>
+                  )}
                 </span>
                 <span className="text-sm">
                   <strong>Valor total</strong>:{" "}
