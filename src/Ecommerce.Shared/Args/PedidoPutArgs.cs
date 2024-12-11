@@ -1,13 +1,17 @@
-﻿using FluentValidation;
+﻿using System.Text.Json.Serialization;
+using FluentValidation;
 
 namespace Ecommerce.Shared.Args;
 
 public sealed class PedidoPutArgs
 {
+    [JsonPropertyName("dataVenda")]
     public DateTime DataVenda { get; set; }
 
+    [JsonPropertyName("cliente")]
     public required ClientePutArgs Cliente { get; set; }
 
+    [JsonPropertyName("itens")]
     public IReadOnlyCollection<PedidoItemArgs> Itens { get; set; } = [];
 
     public class Validator : AbstractValidator<PedidoPutArgs>

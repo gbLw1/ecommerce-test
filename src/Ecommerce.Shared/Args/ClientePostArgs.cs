@@ -1,16 +1,21 @@
-﻿using Ecommerce.Shared.Enums;
+﻿using System.Text.Json.Serialization;
+using Ecommerce.Shared.Enums;
 using FluentValidation;
 
 namespace Ecommerce.Shared.Args;
 
 public sealed class ClientePostArgs
 {
+    [JsonPropertyName("clienteId")]
     public Guid ClienteId { get; set; }
 
+    [JsonPropertyName("nome")]
     public required string Nome { get; set; }
 
+    [JsonPropertyName("cpf")]
     public required string CPF { get; set; }
 
+    [JsonPropertyName("categoria")]
     public ClienteCategoria Categoria { get; set; }
 
     public class Validator : AbstractValidator<ClientePostArgs>

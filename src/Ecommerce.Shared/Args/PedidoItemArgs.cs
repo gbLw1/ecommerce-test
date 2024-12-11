@@ -1,15 +1,20 @@
-﻿using FluentValidation;
+﻿using System.Text.Json.Serialization;
+using FluentValidation;
 
 namespace Ecommerce.Shared.Args;
 
 public sealed class PedidoItemArgs
 {
+    [JsonPropertyName("produtoId")]
     public int ProdutoId { get; set; }
 
+    [JsonPropertyName("descricao")]
     public required string Descricao { get; set; }
 
+    [JsonPropertyName("quantidade")]
     public decimal Quantidade { get; set; }
 
+    [JsonPropertyName("precoUnitario")]
     public decimal PrecoUnitario { get; set; }
 
     public class Validator : AbstractValidator<PedidoItemArgs>

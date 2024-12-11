@@ -20,11 +20,11 @@ builder.Services.AddDbContext<EcommerceContext>(options =>
 
 builder.Services.AddScoped<IPedidoService, PedidoService>();
 
-// Add HttpClient para comunicação com o serviço de faturamento
+// Add HttpClient para comunicaï¿½ï¿½o com o serviï¿½o de faturamento
 builder.Services.AddHttpClient<IPedidoService, PedidoService>(client =>
 {
     client.BaseAddress = new Uri(builder.Configuration["FaturamentoAPI:BaseUrl"]
-        ?? throw new InvalidOperationException("appSettings section: FaturamentoAPI não configurada."));
+        ?? throw new InvalidOperationException("appSettings section: FaturamentoAPI nï¿½o configurada."));
     client.DefaultRequestHeaders.Add("email", builder.Configuration["FaturamentoAPI:Email"]);
 })
 .AddTransientHttpErrorPolicy(policyBuilder =>
@@ -39,7 +39,7 @@ builder.Services.AddHostedService<FilaFaturamentoProcessor>();
 builder.Services.AddHttpClient<FilaFaturamentoProcessor>(client =>
 {
     client.BaseAddress = new Uri(builder.Configuration["FaturamentoAPI:BaseUrl"]
-        ?? throw new InvalidOperationException("appSettings section: FaturamentoAPI não configurada."));
+        ?? throw new InvalidOperationException("appSettings section: FaturamentoAPI nï¿½o configurada."));
     client.DefaultRequestHeaders.Add("email", builder.Configuration["FaturamentoAPI:Email"]);
 });
 
@@ -56,7 +56,7 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Aplicando migrations ao iniciar a aplicação
+// Aplicando migrations ao iniciar a aplicaï¿½ï¿½o
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<EcommerceContext>();
