@@ -9,6 +9,7 @@ import { FaChevronDown, FaChevronUp, FaClipboard } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { PedidoStatus } from "../../enums/pedido-status.enum";
 import clsx from "clsx";
+import TooltipButton from "../../components/tooltip";
 
 interface StatusStyle {
   dot: string;
@@ -100,13 +101,19 @@ export default function ListaPedidos() {
                 <span className="text-sm flex items-center">
                   <strong>Identificador</strong>: {pedido.identificador}
                   <FaClipboard
-                    className="h-4 w-4 ml-1 text-gray-400 cursor-pointer"
+                    data-tooltip-id={`tooltip-${pedido.identificador}`}
+                    data-tooltip-variant="dark"
+                    className="h-4 w-4 ml-1 text-gray-500 cursor-pointer focus:outline-none transition-all duration-300 ease-in-out active:scale-150"
                     onClick={() => {
                       navigator.clipboard.writeText(pedido.identificador);
-                      toast.success(
+                      toast.info(
                         "Identificador copiado para a área de transferência."
                       );
                     }}
+                  />
+                  <TooltipButton
+                    id={`tooltip-${pedido.identificador}`}
+                    text="Copiar identificador"
                   />
                 </span>
                 <span className="text-sm">

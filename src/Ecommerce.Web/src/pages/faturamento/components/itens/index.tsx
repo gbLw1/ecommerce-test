@@ -66,6 +66,7 @@ export const Itens = () => {
               Produto ID
             </label>
             <input
+              type="number"
               {...register("produtoId", {
                 required: "Produto ID é obrigatório",
               })}
@@ -114,6 +115,7 @@ export const Itens = () => {
               Quantidade
             </label>
             <input
+              type="number"
               {...register("quantidade", {
                 required: "Quantidade é obrigatória",
               })}

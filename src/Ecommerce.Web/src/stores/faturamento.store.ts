@@ -14,7 +14,7 @@ interface FaturamentoStore extends PedidoPostArgs {
   addItem: (item: PedidoItemArgs) => void;
   editItem: (item: PedidoItemArgs) => void;
   deleteItem: (item: PedidoItemArgs) => void;
-  cancelarProcessoDeFaturamento: () => void;
+  resetarProcessoDeFaturamento: () => void;
 }
 
 export const useFaturamentoStore = create<FaturamentoStore>()((set) => ({
@@ -50,7 +50,7 @@ export const useFaturamentoStore = create<FaturamentoStore>()((set) => ({
     set((state) => ({
       itens: state.itens.filter((i) => i.produtoId !== item.produtoId),
     })),
-  cancelarProcessoDeFaturamento: () =>
+  resetarProcessoDeFaturamento: () =>
     set({
       cliente: {
         nome: "",

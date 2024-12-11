@@ -8,6 +8,9 @@ import { ClienteCategoria } from "../../../../enums/cliente-categoria.enum";
 import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
 import { RemoveCliente } from "./components/remove-cliente";
 import { EditCliente } from "./components/edit-cliente";
+import { FaRotate } from "react-icons/fa6";
+import { generate_uuidv4 } from "../../../../utils/generate-uuid";
+import TooltipButton from "../../../../components/tooltip";
 
 export const Cliente = () => {
   const { cliente, addCliente: setCliente } = useFaturamentoStore();
@@ -23,7 +26,12 @@ export const Cliente = () => {
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
   } = useForm<ClientePostArgs>();
+
+  function gerarGuidClienteId() {
+    setValue("clienteId", generate_uuidv4());
+  }
 
   function handleCancelClick() {
     setCadastrandoCliente(false);
@@ -100,16 +108,35 @@ export const Cliente = () => {
             >
               Cliente ID
             </label>
-            <input
-              {...register("clienteId", {
-                required: "Cliente ID é obrigatório",
-              })}
-              className={clsx(
-                `w-full border-b-2 border-gray-300 focus:outline-none focus:border-blue-500 px-2 py-1`,
-                errors.clienteId && "border-b-2 !border-rose-600 text-rose-600"
-              )}
-              placeholder="Cliente ID"
-            />
+            <div className="relative">
+              <input
+                {...register("clienteId", {
+                  required: "Cliente ID é obrigatório",
+                  // GUID Pattern
+                  pattern: {
+                    value:
+                      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
+                    message: "Cliente ID deve ser um GUID",
+                  },
+                })}
+                className={clsx(
+                  `w-full border-b-2 border-gray-300 focus:outline-none focus:border-blue-500 px-2 py-1 relative`,
+                  errors.clienteId &&
+                    "border-b-2 !border-rose-600 text-rose-600"
+                )}
+                placeholder="Cliente ID (GUID)"
+              />
+              <FaRotate
+                data-tooltip-id={`tooltip-gerar-guid-cliente-id`}
+                data-tooltip-variant="dark"
+                className="cursor-pointer absolute right-2 top-2 text-gray-500 !border-none transition-all duration-300 ease-in-out active:rotate-90 focus:outline-none"
+                onClick={gerarGuidClienteId}
+              />
+              <TooltipButton
+                id={`tooltip-gerar-guid-cliente-id`}
+                text="Gerar GUID"
+              />
+            </div>
             {errors.clienteId && (
               <span className="text-red-500 text-sm">
                 {errors.clienteId.message}

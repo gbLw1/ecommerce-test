@@ -4,15 +4,26 @@ import { useFaturamentoStore } from "../../stores/faturamento.store";
 import moment from "moment";
 import { Cliente } from "./components/cliente";
 import { Itens } from "./components/itens";
+import api from "../../services/api-client";
+import { PedidoPostArgs } from "../../interfaces/args/pedido-post.args";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import apiErrorHandler from "../../services/api-error-handler";
+import { toast } from "react-toastify";
+import { convertAmountToNumber } from "../../utils/convert-amout";
 
 export default function Faturamento() {
+  const navigate = useNavigate();
+
+  const [loadingFaturamento, setLoadingFaturamento] = useState<boolean>(false);
+
   const {
     identificador,
     dataVenda,
     cliente,
     itens,
     setPedido,
-    cancelarProcessoDeFaturamento,
+    resetarProcessoDeFaturamento,
   } = useFaturamentoStore();
 
   const faturamentoIniciado: boolean = !!identificador && !!dataVenda;
@@ -21,8 +32,40 @@ export default function Faturamento() {
     const guid = generate_uuidv4();
     setPedido({
       identificador: guid,
-      dataVenda: moment().format("YYYY-MM-DD"),
+      dataVenda: moment().toJSON(), // Format: 2021-09-01T00:00:00.000Z
     });
+  }
+
+  async function finalizarFaturamento(): Promise<void> {
+    setLoadingFaturamento(true);
+
+    const args: PedidoPostArgs = {
+      identificador,
+      dataVenda,
+      cliente,
+      itens: itens.map((item) => ({
+        produtoId: item.produtoId,
+        descricao: item.descricao,
+        quantidade: item.quantidade,
+        precoUnitario: convertAmountToNumber(item.precoUnitario.toString()),
+      })),
+    };
+
+    api
+      .post("/api/pedidos", args)
+      .then(({ data }) => {
+        toast.success("Pedido faturado com sucesso!");
+        console.log(data);
+        navigate("/pedidos");
+        resetarProcessoDeFaturamento();
+        // navigate(`/pedidos/${data}`);
+      })
+      .catch((err) => {
+        apiErrorHandler(err);
+      })
+      .finally(() => {
+        setLoadingFaturamento(false);
+      });
   }
 
   return (
@@ -33,7 +76,7 @@ export default function Faturamento() {
         {faturamentoIniciado && (
           <button
             className="bg-red-500 text-white px-4 py-2 rounded max-w-fit"
-            onClick={cancelarProcessoDeFaturamento}
+            onClick={resetarProcessoDeFaturamento}
           >
             Cancelar processo
           </button>
@@ -90,8 +133,12 @@ export default function Faturamento() {
 
       {faturamentoIniciado && cliente && itens.length > 0 && (
         <div className="flex justify-end mt-8">
-          <button className="bg-green-600 text-white px-4 py-2 rounded max-w-fit">
-            Finalizar Faturamento
+          <button
+            className="bg-green-600 text-white px-4 py-2 rounded max-w-fit focus:outline-none"
+            onClick={finalizarFaturamento}
+            disabled={loadingFaturamento}
+          >
+            {loadingFaturamento ? "Faturando..." : "Finalizar Faturamento"}
           </button>
         </div>
       )}
