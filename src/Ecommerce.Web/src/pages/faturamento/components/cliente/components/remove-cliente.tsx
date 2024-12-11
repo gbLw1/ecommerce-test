@@ -1,11 +1,11 @@
-import { useFaturamentoStore } from "../../../../../stores/faturamento.store";
+import { useFaturamentoPostStore } from "../../../../../stores/faturamento-post.store";
 
 interface Props {
   close: () => void;
 }
 
 export const RemoveCliente = ({ close }: Props) => {
-  const { cliente, deleteCliente } = useFaturamentoStore();
+  const { cliente, deleteCliente } = useFaturamentoPostStore();
 
   function handleDeleteCliente() {
     deleteCliente();

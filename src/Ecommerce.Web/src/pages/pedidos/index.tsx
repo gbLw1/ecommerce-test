@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import { PedidoStatus } from "../../enums/pedido-status.enum";
 import clsx from "clsx";
 import TooltipButton from "../../components/tooltip";
+import { Link } from "react-router-dom";
 
 interface StatusStyle {
   dot: string;
@@ -177,14 +178,12 @@ export default function ListaPedidos() {
               {/* Botões e controle de expansão */}
               <div className="flex flex-col gap-4 justify-end">
                 {pedido.status === PedidoStatus.PENDENTE && (
-                  <button
+                  <Link
+                    to={`/pedidos/${pedido.identificador}`}
                     className="flex items-center border-2 border-green-600 text-green-600 p-1 w-full max-w-fit rounded-lg"
-                    onClick={() => {
-                      // TODO: Implementar alteração de pedido
-                    }}
                   >
                     Alterar pedido
-                  </button>
+                  </Link>
                 )}
 
                 <button

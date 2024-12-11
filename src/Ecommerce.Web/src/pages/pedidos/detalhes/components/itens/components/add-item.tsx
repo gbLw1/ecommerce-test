@@ -1,15 +1,15 @@
 import clsx from "clsx";
 import { useForm } from "react-hook-form";
-import { PedidoItemArgs } from "../../../../../interfaces/args/pedido-item.args";
-import { useFaturamentoPostStore } from "../../../../../stores/faturamento-post.store";
-import InputCurrency from "../../../../../components/form/input-currency";
+import { PedidoItemArgs } from "../../../../../../interfaces/args/pedido-item.args";
+import InputCurrency from "../../../../../../components/form/input-currency";
+import { useFaturamentoPutStore } from "../../../../../../stores/faturamento-put.store";
 
 interface Props {
   setCadastrandoItem: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const AddItem = ({ setCadastrandoItem }: Props) => {
-  const { addItem } = useFaturamentoPostStore();
+  const { addItem } = useFaturamentoPutStore();
 
   const {
     control,

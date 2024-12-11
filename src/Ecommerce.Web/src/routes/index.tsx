@@ -1,9 +1,9 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import Home from "../pages/home";
-import NotFound from "../pages/not-found";
 import ListaPedidos from "../pages/pedidos";
 import Faturamento from "../pages/faturamento";
+import DetalhePedido from "../pages/pedidos/detalhes";
 
 export default function AppRouter() {
   return (
@@ -12,9 +12,9 @@ export default function AppRouter() {
         <Route path="/" element={<Home />} />
 
         <Route path="/pedidos" element={<ListaPedidos />} />
-        <Route path="/faturamento" element={<Faturamento />} />
+        <Route path="/pedidos/:pedidoId" element={<DetalhePedido />} />
 
-        <Route path="*" element={<NotFound />} />
+        <Route path="/faturamento" element={<Faturamento />} />
       </Routes>
     </Router>
   );

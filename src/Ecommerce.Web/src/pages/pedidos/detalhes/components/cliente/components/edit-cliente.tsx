@@ -1,26 +1,26 @@
 import clsx from "clsx";
 import { useForm } from "react-hook-form";
-import { useFaturamentoPostStore } from "../../../../../stores/faturamento-post.store";
-import { ClientePostArgs } from "../../../../../interfaces/args/cliente-post.args";
-import { ClienteCategoria } from "../../../../../enums/cliente-categoria.enum";
+import { ClienteCategoria } from "../../../../../../enums/cliente-categoria.enum";
 import ReactInputMask from "react-input-mask";
+import { useFaturamentoPutStore } from "../../../../../../stores/faturamento-put.store";
+import { ClientePutArgs } from "../../../../../../interfaces/args/cliente-put.args";
 
 interface Props {
   close: () => void;
 }
 
 export const EditCliente = ({ close }: Props) => {
-  const { cliente, editCliente } = useFaturamentoPostStore();
+  const { clienteId, cliente, editCliente } = useFaturamentoPutStore();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ClientePostArgs>({
+  } = useForm<ClientePutArgs>({
     values: cliente,
   });
 
-  function onSubmit(data: ClientePostArgs) {
+  function onSubmit(data: ClientePutArgs) {
     editCliente(data);
     close();
   }
@@ -45,21 +45,11 @@ export const EditCliente = ({ close }: Props) => {
               Cliente ID
             </label>
             <input
-              {...register("clienteId", {
-                required: "Cliente ID é obrigatório",
-              })}
               disabled
-              className={clsx(
-                `w-full border-b-2 border-gray-300 focus:outline-none focus:border-blue-500 px-2 py-1 text-gray-500 bg-gray-100`,
-                errors.clienteId && "border-b-2 !border-rose-600 text-rose-600"
-              )}
+              className="w-full border-b-2 border-gray-300 focus:outline-none focus:border-blue-500 px-2 py-1 text-gray-500 bg-gray-100"
               placeholder="Cliente ID"
+              value={clienteId}
             />
-            {errors.clienteId && (
-              <span className="text-red-500 text-sm">
-                {errors.clienteId.message}
-              </span>
-            )}
           </div>
 
           <div className="flex flex-col">

@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
-import { PedidoItemArgs } from "../../../../../interfaces/args/pedido-item.args";
-import { useFaturamentoPostStore } from "../../../../../stores/faturamento-post.store";
-import { convertAmountToBRL } from "../../../../../utils/convert-amout";
+import { PedidoItemArgs } from "../../../../../../interfaces/args/pedido-item.args";
+import { useFaturamentoPutStore } from "../../../../../../stores/faturamento-put.store";
+import { convertAmountToBRL } from "../../../../../../utils/convert-amout";
 
 interface Props {
   item: PedidoItemArgs;
@@ -9,7 +9,7 @@ interface Props {
 }
 
 export const RemoveItem = ({ item, close }: Props) => {
-  const { deleteItem } = useFaturamentoPostStore();
+  const { deleteItem } = useFaturamentoPutStore();
 
   const { handleSubmit } = useForm<PedidoItemArgs>({
     values: item,

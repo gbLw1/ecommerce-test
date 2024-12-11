@@ -1,6 +1,6 @@
 import { MainLayout } from "../../components/layouts/main";
 import { generate_uuidv4 } from "../../utils/generate-uuid";
-import { useFaturamentoStore } from "../../stores/faturamento.store";
+import { useFaturamentoPostStore } from "../../stores/faturamento-post.store";
 import moment from "moment";
 import { Cliente } from "./components/cliente";
 import { Itens } from "./components/itens";
@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import apiErrorHandler from "../../services/api-error-handler";
 import { toast } from "react-toastify";
 import { convertAmountToNumber } from "../../utils/convert-amout";
+import { PedidoModel } from "../../interfaces/models/pedido.model";
 
 export default function Faturamento() {
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ export default function Faturamento() {
     itens,
     setPedido,
     resetarProcessoDeFaturamento,
-  } = useFaturamentoStore();
+  } = useFaturamentoPostStore();
 
   const faturamentoIniciado: boolean = !!identificador && !!dataVenda;
   const clienteCadastrado = cliente.nome && cliente.cpf && cliente.clienteId;
@@ -53,13 +54,11 @@ export default function Faturamento() {
     };
 
     api
-      .post("/api/pedidos", args)
+      .post<PedidoModel>("/api/pedidos", args)
       .then(({ data }) => {
-        toast.success("Pedido faturado com sucesso!");
-        console.log(data);
-        navigate("/pedidos");
+        toast.success("Pedido cadastrado com sucesso!");
         resetarProcessoDeFaturamento();
-        // navigate(`/pedidos/${data}`);
+        navigate(`/pedidos/${data.identificador}`);
       })
       .catch((err) => {
         apiErrorHandler(err);
@@ -124,7 +123,7 @@ export default function Faturamento() {
 
             <span className="bg-gray-100 p-2 rounded text-sm max-w-fit">
               <strong>Data da venda:</strong>{" "}
-              {moment(dataVenda).format("DD/MM/YYYY")}
+              {moment(dataVenda).format("DD/MM/YYYY HH:mm:ss")}
             </span>
           </>
         )}

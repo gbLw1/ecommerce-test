@@ -141,11 +141,12 @@ public class PedidoService(
         return [.. vendas.Select(v => v.ToModel())];
     }
 
-    public async Task<PedidoModel?> ObterPedidoAsync(Guid pedidoId)
+    public async Task<PedidoModel?> ObterPedidoAsync(Guid pedidoId, PedidoStatus? status = null)
     {
         var venda = await context.Pedidos
             .Include(p => p.Cliente)
             .Include(p => p.Itens)
+            .Where(p => status.HasValue ? p.Status == status : true) // Filtrar por status somente se informado
             .FirstOrDefaultAsync(p => p.Identificador == pedidoId);
 
         return venda?.ToModel();
@@ -227,7 +228,7 @@ public class PedidoService(
             throw;
         }
 
-        return pedido?.ToModel();
+        return pedido.ToModel();
     }
 
 

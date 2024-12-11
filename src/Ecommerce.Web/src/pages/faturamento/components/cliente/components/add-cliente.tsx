@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { ClientePostArgs } from "../../../../../interfaces/args/cliente-post.args";
 import { generate_uuidv4 } from "../../../../../utils/generate-uuid";
-import { useFaturamentoStore } from "../../../../../stores/faturamento.store";
+import { useFaturamentoPostStore } from "../../../../../stores/faturamento-post.store";
 import { FaRotate } from "react-icons/fa6";
 import TooltipButton from "../../../../../components/tooltip";
 import clsx from "clsx";
@@ -13,7 +13,7 @@ interface Props {
 }
 
 export const AddCliente = ({ setCadastrandoCliente }: Props) => {
-  const { addCliente } = useFaturamentoStore();
+  const { addCliente } = useFaturamentoPostStore();
 
   const {
     register,

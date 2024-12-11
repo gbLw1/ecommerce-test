@@ -1,44 +1,43 @@
 import { create } from "zustand";
-import { PedidoPostArgs } from "../interfaces/args/pedido-post.args";
 import { ClienteCategoria } from "../enums/cliente-categoria.enum";
 import { PedidoItemArgs } from "../interfaces/args/pedido-item.args";
-import { ClientePostArgs } from "../interfaces/args/cliente-post.args";
+import { PedidoPutArgs } from "../interfaces/args/pedido-put.args";
+import { ClientePutArgs } from "../interfaces/args/cliente-put.args";
 
-interface FaturamentoStore extends PedidoPostArgs {
-  setPedido: (
-    pedido: Pick<PedidoPostArgs, "identificador" | "dataVenda">
-  ) => void;
-  addCliente: (cliente: ClientePostArgs) => void;
-  editCliente: (cliente: ClientePostArgs) => void;
-  deleteCliente: () => void;
+interface FaturamentoPutStore extends PedidoPutArgs {
+  setPedidoDataVenda: (dataVenda: string) => void;
+
+  clienteId: string;
+  setClienteId: (clienteId: string) => void;
+  setCliente: (cliente: ClientePutArgs) => void;
+  editCliente: (cliente: ClientePutArgs) => void;
+
+  setItens: (itens: PedidoItemArgs[]) => void;
   addItem: (item: PedidoItemArgs) => void;
   editItem: (item: PedidoItemArgs) => void;
   deleteItem: (item: PedidoItemArgs) => void;
-  resetarProcessoDeFaturamento: () => void;
+
+  resetarProcessoDeEdicao: () => void;
 }
 
-export const useFaturamentoStore = create<FaturamentoStore>()((set) => ({
+export const useFaturamentoPutStore = create<FaturamentoPutStore>()((set) => ({
+  dataVenda: "",
   cliente: {
     nome: "",
     categoria: ClienteCategoria.REGULAR,
     clienteId: "",
     cpf: "",
   },
-  dataVenda: "",
-  identificador: "",
   itens: [],
-  setPedido: (pedido) => set((state) => ({ ...state, ...pedido })),
-  addCliente: (cliente) => set({ cliente }),
+
+  setPedidoDataVenda: (dataVenda) => set({ dataVenda }),
+
+  clienteId: "",
+  setClienteId: (clienteId) => set({ clienteId }),
+  setCliente: (cliente) => set({ cliente }),
   editCliente: (cliente) => set({ cliente }),
-  deleteCliente: () =>
-    set({
-      cliente: {
-        nome: "",
-        categoria: ClienteCategoria.REGULAR,
-        clienteId: "",
-        cpf: "",
-      },
-    }),
+
+  setItens: (itens) => set({ itens }),
   addItem: (item) => set((state) => ({ itens: [...state.itens, item] })),
   editItem: (item) =>
     set((state) => ({
@@ -50,16 +49,15 @@ export const useFaturamentoStore = create<FaturamentoStore>()((set) => ({
     set((state) => ({
       itens: state.itens.filter((i) => i.produtoId !== item.produtoId),
     })),
-  resetarProcessoDeFaturamento: () =>
+
+  resetarProcessoDeEdicao: () =>
     set({
+      dataVenda: "",
       cliente: {
         nome: "",
         categoria: ClienteCategoria.REGULAR,
-        clienteId: "",
         cpf: "",
       },
-      dataVenda: "",
-      identificador: "",
       itens: [],
     }),
 }));

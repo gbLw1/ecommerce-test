@@ -1,8 +1,12 @@
 import clsx from "clsx";
 import { useForm } from "react-hook-form";
-import { PedidoItemArgs } from "../../../../../interfaces/args/pedido-item.args";
-import InputCurrency from "../../../../../components/form/input-currency";
-import { useFaturamentoPostStore } from "../../../../../stores/faturamento-post.store";
+import { PedidoItemArgs } from "../../../../../../interfaces/args/pedido-item.args";
+import InputCurrency from "../../../../../../components/form/input-currency";
+import { useFaturamentoPutStore } from "../../../../../../stores/faturamento-put.store";
+import {
+  convertAmountToBRL,
+  convertAmountToNumber,
+} from "../../../../../../utils/convert-amout";
 
 interface Props {
   item: PedidoItemArgs;
@@ -10,7 +14,7 @@ interface Props {
 }
 
 export const EditItem = ({ item, close }: Props) => {
-  const { editItem } = useFaturamentoPostStore();
+  const { editItem } = useFaturamentoPutStore();
 
   const {
     control,
@@ -18,11 +22,23 @@ export const EditItem = ({ item, close }: Props) => {
     handleSubmit,
     formState: { errors },
   } = useForm<PedidoItemArgs>({
-    values: item,
+    values: {
+      descricao: item.descricao,
+      // @ts-expect-error - precoUnitario is a string
+      precoUnitario: convertAmountToBRL(item.precoUnitario),
+      produtoId: item.produtoId,
+      quantidade: item.quantidade,
+    },
   });
 
   function onSubmit(data: PedidoItemArgs) {
-    editItem(data);
+    editItem({
+      descricao: data.descricao,
+      // @ts-expect-error - precoUnitario is a string
+      precoUnitario: convertAmountToNumber(data.precoUnitario),
+      produtoId: data.produtoId,
+      quantidade: data.quantidade,
+    });
     close();
   }
 

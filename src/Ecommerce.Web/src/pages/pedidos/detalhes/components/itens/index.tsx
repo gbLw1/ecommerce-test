@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { useFaturamentoPostStore } from "../../../../stores/faturamento-post.store";
-import { PedidoItemArgs } from "../../../../interfaces/args/pedido-item.args";
+import { PedidoItemArgs } from "../../../../../interfaces/args/pedido-item.args";
 import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
 import { EditItem } from "./components/edit-item";
 import { RemoveItem } from "./components/remove-item";
 import { AddItem } from "./components/add-item";
-import { convertAmountToBRL } from "../../../../utils/convert-amout";
+import { useFaturamentoPutStore } from "../../../../../stores/faturamento-put.store";
+import { convertAmountToBRL } from "../../../../../utils/convert-amout";
 
 export const Itens = () => {
-  const { itens } = useFaturamentoPostStore();
+  const { itens } = useFaturamentoPutStore();
 
   const [cadastrandoItem, setCadastrandoItem] = useState<boolean>(false);
   const [editandoItem, setEditandoItem] = useState<PedidoItemArgs | null>(null);

@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { useFaturamentoStore } from "../../../../stores/faturamento.store";
+import { useFaturamentoPostStore } from "../../../../stores/faturamento-post.store";
 import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
 import { RemoveCliente } from "./components/remove-cliente";
 import { EditCliente } from "./components/edit-cliente";
 import { AddCliente } from "./components/add-cliente";
 
 export const Cliente = () => {
-  const { cliente } = useFaturamentoStore();
+  const { cliente } = useFaturamentoPostStore();
 
   const clienteCadastrado = cliente.nome && cliente.cpf && cliente.clienteId;
 
@@ -75,7 +75,7 @@ export const Cliente = () => {
         <EditCliente close={() => setEditandoCliente(false)} />
       )}
 
-      {/* Remover clientee (Modal) */}
+      {/* Remover cliente (Modal) */}
       {removendoCliente && (
         <RemoveCliente close={() => setRemovendoCliente(false)} />
       )}
