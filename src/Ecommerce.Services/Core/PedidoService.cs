@@ -83,7 +83,7 @@ public class PedidoService(
         var sumario = new SumarioFaturamentoPostArgs
         {
             Identificador = pedido.Identificador,
-            SubTotal = Math.Round(pedido.SubTotal, 2, MidpointRounding.ToZero),
+            Subtotal = Math.Round(pedido.SubTotal, 2, MidpointRounding.ToZero),
             Descontos = Math.Round(pedido.Desconto, 2, MidpointRounding.ToZero),
             ValorTotal = Math.Round(pedido.ValorTotal, 2, MidpointRounding.ToZero),
             Itens = pedido.Itens.Select(i => new SumarioFaturamentoItemPostArgs
@@ -98,6 +98,9 @@ public class PedidoService(
 
         try
         {
+            // ===== UTILIZE O CÓDIGO ABAIXO PARA SIMULAR ERRO NO SERVIÇO DE FATURAMENTO =====
+            // throw new HttpRequestException("Simulando erro no serviço de faturamento.");
+
             var response = await httpClient.PostAsync("/api/vendas", content);
             if (response.IsSuccessStatusCode)
             {

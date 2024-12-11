@@ -1,5 +1,6 @@
 using Ecommerce.Infra.Context;
 using Ecommerce.Services.Abstractions;
+using Ecommerce.Services.Backgrounds;
 using Ecommerce.Services.Core;
 using Microsoft.EntityFrameworkCore;
 using Polly;
@@ -20,12 +21,16 @@ builder.Services.AddDbContext<EcommerceContext>(options =>
 
 builder.Services.AddScoped<IPedidoService, PedidoService>();
 
-// Add HttpClient para comunica��o com o servi�o de faturamento
+var ExternalServiceAPIBaseURL = builder.Configuration["FaturamentoAPI:BaseUrl"]
+    ?? throw new InvalidOperationException("appSettings section: FaturamentoAPI:BaseUrl não configurada.");
+var ExternalServiceAPIEmail = builder.Configuration["FaturamentoAPI:Email"]
+    ?? throw new InvalidOperationException("appSettings section: FaturamentoAPI:Email não configurado.");
+
+// Add HttpClient para comunicação com o serviço de faturamento
 builder.Services.AddHttpClient<IPedidoService, PedidoService>(client =>
 {
-    client.BaseAddress = new Uri(builder.Configuration["FaturamentoAPI:BaseUrl"]
-        ?? throw new InvalidOperationException("appSettings section: FaturamentoAPI n�o configurada."));
-    client.DefaultRequestHeaders.Add("email", builder.Configuration["FaturamentoAPI:Email"]);
+    client.BaseAddress = new Uri(ExternalServiceAPIBaseURL);
+    client.DefaultRequestHeaders.Add("email", ExternalServiceAPIEmail);
 })
 .AddTransientHttpErrorPolicy(policyBuilder =>
     policyBuilder.WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))) // backoff exponencial
@@ -36,11 +41,10 @@ builder.Services.AddHttpClient<IPedidoService, PedidoService>(client =>
 builder.Services.AddHostedService<FilaFaturamentoProcessor>();
 
 // Add HttpClient para background service
-builder.Services.AddHttpClient<FilaFaturamentoProcessor>(client =>
+builder.Services.AddHttpClient<FaturamentoServiceClient>(client =>
 {
-    client.BaseAddress = new Uri(builder.Configuration["FaturamentoAPI:BaseUrl"]
-        ?? throw new InvalidOperationException("appSettings section: FaturamentoAPI n�o configurada."));
-    client.DefaultRequestHeaders.Add("email", builder.Configuration["FaturamentoAPI:Email"]);
+    client.BaseAddress = new Uri(ExternalServiceAPIBaseURL);
+    client.DefaultRequestHeaders.Add("email", ExternalServiceAPIEmail);
 });
 
 builder.Services.AddCors(options =>

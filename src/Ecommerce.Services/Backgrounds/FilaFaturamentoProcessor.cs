@@ -1,5 +1,6 @@
 ﻿using Ecommerce.Infra.Context;
 using Ecommerce.Infra.Entities;
+using Ecommerce.Services.Backgrounds;
 using Ecommerce.Shared.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,8 +9,9 @@ using Microsoft.Extensions.Logging;
 using System.Text;
 
 public class FilaFaturamentoProcessor(
+    ILogger<FilaFaturamentoProcessor> logger,
     IServiceProvider serviceProvider,
-    ILogger<FilaFaturamentoProcessor> logger)
+    FaturamentoServiceClient faturamentClient)
     : BackgroundService
 {
     private const int MAX_TENTATIVAS = 5;
@@ -22,14 +24,13 @@ public class FilaFaturamentoProcessor(
         while (!stoppingToken.IsCancellationRequested)
         {
             await timer.WaitForNextTickAsync(stoppingToken);
-            logger.LogInformation($"Processamento de fila executado em: {DateTime.UtcNow}");
-
-            using var scope = serviceProvider.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<EcommerceContext>();
-            var httpClient = scope.ServiceProvider.GetRequiredService<HttpClient>();
+            logger.LogInformation($"--> Processamento de fila executado em: {DateTime.UtcNow}");
 
             try
             {
+                using var scope = serviceProvider.CreateScope();
+                var context = scope.ServiceProvider.GetRequiredService<EcommerceContext>();
+
                 var itensFila = await context.FilaFaturamento
                     .OrderBy(f => f.CriadoEm)
                     .Take(10)
@@ -48,7 +49,7 @@ public class FilaFaturamentoProcessor(
                         logger.LogInformation($"Reenviando pedido {item.PedidoId}");
 
                         var content = new StringContent(item.Payload, Encoding.UTF8, "application/json");
-                        var response = await httpClient.PostAsync("/api/vendas", content, stoppingToken);
+                        var response = await faturamentClient.HttpClient.PostAsync("/api/vendas", content, stoppingToken);
 
                         if (response.IsSuccessStatusCode)
                         {
@@ -76,12 +77,12 @@ public class FilaFaturamentoProcessor(
             }
         }
 
-        logger.LogInformation("==> Finalizando processamento de fila.");
+        logger.LogInformation("--> Finalizando processamento de fila.");
     }
 
     private async Task AtualizarPedidoStatus(EcommerceContext context, Guid pedidoId, PedidoStatus novoStatus)
     {
-        var pedido = await context.Pedidos.FindAsync(pedidoId);
+        var pedido = await context.Pedidos.FirstOrDefaultAsync(p => p.Identificador == pedidoId);
         if (pedido is not null)
         {
             pedido.Status = novoStatus;
