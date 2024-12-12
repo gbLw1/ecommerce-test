@@ -70,7 +70,7 @@ public class PedidoService(
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Erro ao processar venda.");
+            logger.LogError(ex, "Erro ao cadastrar pedido.");
             await context.Database.RollbackTransactionAsync();
             throw;
         }
@@ -230,7 +230,6 @@ public class PedidoService(
 
         return pedido.ToModel();
     }
-
 
     private decimal ObterDesconto(decimal subTotal, ClienteCategoria categoria) => categoria switch
     {
