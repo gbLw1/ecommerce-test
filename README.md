@@ -160,6 +160,15 @@ Para a escolha da arquitetura, optei por uma divisão em 4 camadas que suprisse 
 - [x] Timeout controlado evitando travamentos em respostas indefinidas
 - [x] Fila para reprocessamento de pedidos que falharam no processo de faturamento, garante que pedidos sejam faturados mesmo se o serviço estiver fora do ar por um longo período
 - [x] Background service para automatização do agendamento e reprocessamento de pedidos da fila de falhas
+
+  Para testar a fila de falhas, basta descomentar o throw no método `EnviarParaFaturamento` na linha 102 do arquivo [`PedidoService.cs`](./src/Ecommerce.Services/Core/PedidoService.cs)
+
+  ```csharp
+  throw new HttpRequestException("Simulando erro no serviço de faturamento.");
+  ```
+
+  A partir disso, todo pedido cadastrado será enviado para a fila de falhas e reprocessado automaticamente a cada 30 segundos, respeitando o limite de tentativas e o tempo de espera configurados.
+
 - [x] Logs de falhas com `ILogger` para monitoramento e análise de erros
 - [x] Documentação da API com Swagger
 
