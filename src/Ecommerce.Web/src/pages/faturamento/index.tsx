@@ -55,10 +55,10 @@ export default function Faturamento() {
 
     api
       .post<PedidoModel>("/api/pedidos", args)
-      .then(({ data }) => {
+      .then(() => {
         toast.success("Pedido cadastrado com sucesso!");
         resetarProcessoDeFaturamento();
-        navigate(`/pedidos/${data.identificador}`);
+        navigate("/pedidos");
       })
       .catch((err) => {
         apiErrorHandler(err);

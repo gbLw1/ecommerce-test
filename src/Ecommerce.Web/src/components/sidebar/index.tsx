@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { FaBars, FaCartArrowDown, FaRegListAlt } from "react-icons/fa";
-import { FaShop } from "react-icons/fa6";
+import { FaRotate, FaShop } from "react-icons/fa6";
 import logo from "/logo.png";
 
 export const Sidebar = () => {
@@ -99,6 +99,18 @@ export const Sidebar = () => {
                 <FaCartArrowDown className="w-5 h-5 transition duration-75 group-hover:text-slate-300" />
                 <span className="flex-1 ms-3 whitespace-nowrap group-hover:text-slate-300">
                   Faturamento
+                </span>
+              </Link>
+            </li>
+
+            <li>
+              <Link
+                to="/fila-reprocessamento"
+                className="flex items-center p-2 rounded-lg group"
+              >
+                <FaRotate className="w-5 h-5 transition duration-75 group-hover:text-slate-300" />
+                <span className="flex-1 ms-3 whitespace-nowrap group-hover:text-slate-300">
+                  Fila de reprocessamento
                 </span>
               </Link>
             </li>

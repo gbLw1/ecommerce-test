@@ -180,7 +180,7 @@ export default function ListaPedidos() {
                 {pedido.status === PedidoStatus.PENDENTE && (
                   <Link
                     to={`/pedidos/${pedido.identificador}`}
-                    className="flex items-center border-2 border-green-600 text-green-600 p-1 w-full max-w-fit rounded-lg"
+                    className="flex items-center border-2 border-yellow-600 text-yellow-600 p-1 w-full max-w-fit rounded-lg"
                   >
                     Alterar pedido
                   </Link>
